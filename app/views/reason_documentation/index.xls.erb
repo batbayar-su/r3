@@ -1,0 +1,82 @@
+<%
+time = Time.now
+title = time.strftime("%Y-%m")
+if params[:scope]
+  if params[:scope] == 'previous'
+    title = Time.utc(time.year, time.month-1).strftime("%Y-%m")
+  elsif params[:scope] == 'year'
+    title = time.strftime("%Y")
+  else
+    title = params[:scope]
+  end
+end
+title = "Report of #{title}"
+%>
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Report Summary">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String"><%= title %></Data></Cell>
+      </Row>
+      <Row>
+      </Row>
+      <Row>
+        <Cell><Data ss:Type="String">担当者</Data></Cell>
+        <Cell><Data ss:Type="String">役割</Data></Cell>
+        <Cell><Data ss:Type="String">Issue No.</Data></Cell>
+        <Cell><Data ss:Type="String">バグ発生回数</Data></Cell>
+      </Row>
+      <% @data_summary.each do |data| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= data.uname %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= 'test' %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= "##{data.journalized_id}" %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= data.faults %></Data></Cell>
+      </Row>
+      <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Report By User">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String"><%= title %></Data></Cell>
+      </Row>
+      <Row>
+      </Row>
+      <Row>
+        <Cell><Data ss:Type="String">担当者</Data></Cell>
+        <Cell><Data ss:Type="String">バグ発生回数</Data></Cell>
+      </Row>
+      <% @data_by_user.each do |data| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= data.uname %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= data.faults %></Data></Cell>
+      </Row>
+      <% end %>
+    </Table>
+  </Worksheet>
+  <Worksheet ss:Name="Report By Error">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String"><%= title %></Data></Cell>
+      </Row>
+      <Row>
+      </Row>
+      <Row>
+        <Cell><Data ss:Type="String">役割</Data></Cell>
+        <Cell><Data ss:Type="String">バグ発生回数</Data></Cell>
+      </Row>
+      <% @data_by_error.each do |data| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= data.fname %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= data.faults %></Data></Cell>
+      </Row>
+      <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

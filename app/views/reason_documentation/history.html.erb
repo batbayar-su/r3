@@ -1,0 +1,19 @@
+<div class="contextual">
+  <%
+  links = []
+  links << 'History'
+  links << link_to('This Year', reason_documentation_path(scope: 'year'))
+  links << link_to('Previous Month', reason_documentation_path(scope: 'previous'))
+  links << link_to('This Month', reason_documentation_path)
+  %>
+  <%= links.join(" | ").html_safe %>
+</div>
+<h2>Reason report history</h2>
+<div id="admin-menu">
+  <ul>
+    <% @history.each do |row| %>
+      <% year_and_month = row.year_and_month %>
+      <li><%= link_to(year_and_month, reason_documentation_path(scope: year_and_month)) %></li>
+    <% end %>
+  </ul>
+</div>

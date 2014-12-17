@@ -1,0 +1,74 @@
+<div class="contextual">
+  <%
+  links = []
+  links << link_to('History', reason_documentation_history_path)
+  link = (params[:scope] && params[:scope] == 'year') ? 'This Year' : link_to('This Year', reason_documentation_path(scope: 'year'))
+  links << link
+  link = (params[:scope] && params[:scope] == 'previous') ? 'Previous Month' : link_to('Previous Month', reason_documentation_path(scope: 'previous'))
+  links << link
+  link = (params[:scope]) ? link_to('This Month', reason_documentation_path) : 'This Month'
+  links << link
+  %>
+  <%= links.join(" | ").html_safe %>
+</div>
+<h2>Reason report</h2>
+<div id="list-left" class="splitcontentleft">
+  <div class="mypage-box">
+    <table class="list issues">
+      <thead><tr>
+        <th>担当者</th>
+        <th>役割</th>
+        <th>Issue No.</th>
+        <th>バグ発生回数</th>
+      </tr></thead>
+      <tbody>
+        <% for data in @data_summary %>
+        <tr id="issue-<%= h(data.journalized_id) %>" class="hascontextmenu <%= cycle('odd', 'even') %>">
+          <td><%= link_to( data.uname, controller: "users", action: "edit", id: data.user_id ) %></td>
+          <td><%= 'test' %></td>
+          <td><%= link_to( "##{data.journalized_id}", controller: "issues", action: "show", id: data.journalized_id ) %></td>
+          <td><%= data.faults %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div id="list-right" class="splitcontentright">
+  <div class="mypage-box">
+    <table class="list issues">
+      <thead><tr>
+        <th>担当者</th>
+        <th>バグ発生回数</th>
+      </tr></thead>
+      <tbody>
+        <% for data in @data_by_user %>
+        <tr class="hascontextmenu <%= cycle('odd', 'even') %>">
+          <td><%= link_to( data.uname, controller: "users", action: "edit", id: data.user_id ) %></td>
+          <td><%= data.faults %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="mypage-box">
+    <table class="list issues">
+      <thead><tr>
+        <th>役割</th>
+        <th>バグ発生回数</th>
+      </tr></thead>
+      <tbody>
+        <% for data in @data_by_error %>
+        <tr class="hascontextmenu <%= cycle('odd', 'even') %>">
+          <td><%= data.fname %></td>
+          <td><%= data.faults %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="clear"></div>
+<p class="other-formats">Also available in:
+<span><%= link_to 'XLS', current_url(:format => :xls) %></span>
+</p>
