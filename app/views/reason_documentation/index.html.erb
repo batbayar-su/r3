@@ -11,6 +11,7 @@
   %>
   <%= links.join(" | ").html_safe %>
 </div>
+<p><%= @data.to_sql %></p>
 <h2>Reason report</h2>
 <div id="list-left" class="splitcontentleft">
   <div class="mypage-box">
@@ -25,7 +26,7 @@
         <% for data in @data_summary %>
         <tr id="issue-<%= h(data.journalized_id) %>" class="hascontextmenu <%= cycle('odd', 'even') %>">
           <td><%= link_to( data.uname, controller: "users", action: "edit", id: data.user_id ) %></td>
-          <td><%= 'test' %></td>
+          <td><%= data.fname %></td>
           <td><%= link_to( "##{data.journalized_id}", controller: "issues", action: "show", id: data.journalized_id ) %></td>
           <td><%= data.faults %></td>
         </tr>
